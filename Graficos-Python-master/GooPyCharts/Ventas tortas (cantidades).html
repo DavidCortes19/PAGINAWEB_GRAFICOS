@@ -1,0 +1,76 @@
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+    $.getScript( "https://www.gstatic.com/charts/loader.js", function() {
+      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+      {
+         google.charts.load('current', {'packages':['corechart']});
+      }
+
+      google.charts.setOnLoadCallback(drawChart_Ventas_tortas__cantidades_);
+    });
+    
+    function drawChart_Ventas_tortas__cantidades_() {
+        var dataArr = [['Dias', 'Semana1', 'Semana2'], ['Lunes', 3, 4], ['Martes', 4, 2], ['Miercoles', 5, 1], ['Jueves', 4, 2], ['Viernes', 3, 4], ['Sabado', 5, 1], ['Domingo', 4, 2]];
+        var grTitle = 'Ventas tortas (cantidades)';
+        var height = 600;
+        var width = 800;
+        var logScaleFlag = false;
+        var vAxisTitle = 'Cantidad';
+        var vAxisOpt;
+        if(logScaleFlag)
+        {
+            vAxisOpt = { title: vAxisTitle, logScale: true, format: 'scientific'};
+        }
+        else
+        {
+            vAxisOpt = { title: vAxisTitle };
+        }
+
+        var options = {
+            width: width,
+            height: height,
+            explorer: { actions: ['dragToZoom', 'rightClickToReset'], maxZoomIn: 0.01 },
+            curveType: 'function',
+            title: grTitle,
+            titleTextStyle: { fontSize: 18, bold: true },
+            hAxis: { title: dataArr[0][0] },
+            vAxis: vAxisOpt,
+            
+        };
+
+        var data = new google.visualization.DataTable();
+        var csvOut = "data:text/csv;charset=utf-8";
+        // Add column headers
+        data.addColumn('string',dataArr[0][0]);
+        csvOut += ',' + dataArr[0][0];
+        for (var j = 0; j < dataArr[0].length-1; j++)
+        {
+           data.addColumn('number',dataArr[0][j+1]);
+           csvOut += ',' + dataArr[0][j+1];
+        }
+        csvOut += '\n';
+
+        // Add columns
+        for (var i = 1; i < dataArr.length; i++)
+        {
+            data.addRow(dataArr[i]);
+            csvOut += dataArr[i].join(",") + '\n';
+        }
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div_Ventas_tortas__cantidades_'));
+
+        chart.draw(data, options);
+        document.getElementById('pic_div_Ventas_tortas__cantidades_').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
+        document.getElementById('csvFileDl_Ventas_tortas__cantidades_').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
+    }
+    </script>
+</head>
+<body>
+    <div id="chart_div_Ventas_tortas__cantidades_"></div>
+    <div id="pic_div_Ventas_tortas__cantidades_"></div>
+    <div id="csvFileDl_Ventas_tortas__cantidades_"></div>
+</body>
+</html>

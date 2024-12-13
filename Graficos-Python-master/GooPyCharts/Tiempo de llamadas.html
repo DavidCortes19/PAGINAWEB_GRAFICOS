@@ -1,0 +1,69 @@
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+    $.getScript( "https://www.gstatic.com/charts/loader.js", function() {
+      if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) 
+      {
+         google.charts.load('current', {'packages':['corechart']});
+      }
+
+      google.charts.setOnLoadCallback(drawChart_Tiempo_de_llamadas);
+    });
+    
+    function drawChart_Tiempo_de_llamadas() {
+        var dataArr = ['Minutos', 5, 10, 25, 24, 47, 55, 3, 58, 12, 18, 39, 45, 48, 49, 51, 21, 34, 19, 71, 75, 83];
+        var grTitle = 'Tiempo de llamadas';
+        var height = 600;
+        var width = 1000;
+        var logScaleFlag = false;
+        var vAxisTitle = '';
+        var vAxisOpt;
+        if(logScaleFlag)
+        {
+            vAxisOpt = { title: vAxisTitle, logScale: true, format: 'scientific'};
+        }
+        else
+        {
+            vAxisOpt = { title: vAxisTitle };
+        }
+
+        var options = {
+            width: width,
+            height: height,
+            title: grTitle,
+            titleTextStyle: { fontSize: 18, bold: true },
+            hAxis: { title: dataArr[0]},
+            vAxis: vAxisOpt,
+            
+        };
+
+        var data = new google.visualization.DataTable();
+        var csvOut = "data:text/csv;charset=utf-8";
+        // Add column header
+        data.addColumn('number',dataArr[0]);
+        csvOut += ',' + dataArr[0];
+        csvOut += '\n';
+
+        // Add data
+        for (var i = 1; i < dataArr.length; i++)
+        {
+            data.addRow([dataArr[i]]);
+            csvOut += dataArr[i].toString()+'\n';
+        }
+
+        var chart = new google.visualization.Histogram(document.getElementById('chart_div_Tiempo_de_llamadas'));
+
+        chart.draw(data, options);
+        document.getElementById('pic_div_Tiempo_de_llamadas').innerHTML = '<a href="' + chart.getImageURI() + '" download="'+grTitle+'.png">Download Figure</a>'
+        document.getElementById('csvFileDl_Tiempo_de_llamadas').innerHTML = '<a href="' + encodeURI(csvOut) + '" download="'+grTitle+'.csv">Download CSV</a>'
+    }
+    </script>
+</head>
+<body>
+    <div id="chart_div_Tiempo_de_llamadas"></div>
+    <div id="pic_div_Tiempo_de_llamadas"></div>
+    <div id="csvFileDl_Tiempo_de_llamadas"></div>
+</body>
+</html>
